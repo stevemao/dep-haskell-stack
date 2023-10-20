@@ -58,9 +58,11 @@ describe('yaml.ts', () => {
   it('should save stack.yaml', async () => {
     const doc = await getStackYaml(`${__dirname}/fixtures/stack.yaml`)
 
-    await saveStackYaml(doc, `${__dirname}/results/stack.yaml`)
+    const result = `${__dirname}/results/stack.yaml`
 
-    const updated = await getStackYaml(`${__dirname}/results/stack.yaml`)
+    await saveStackYaml(doc, result)
+
+    const updated = await getStackYaml(result)
 
     expect(updated.get('resolver')).toBe('lts-21.16')
   })

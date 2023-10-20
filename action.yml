@@ -9,7 +9,9 @@ inputs:
     default: './stack.yaml'
 
 # Define your outputs here.
-outputs: {}
+outputs:
+  resolver:
+    description: 'The latest resolver'
 
 runs:
   using: node20

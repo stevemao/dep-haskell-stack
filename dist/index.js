@@ -4077,7 +4077,7 @@ async function run() {
             '--dependencies-only'
         ]);
         // Set outputs for other workflow steps to use
-        // core.setOutput()
+        core.setOutput('resolver', resolver);
     }
     catch (error) {
         // Fail the workflow run if an error occurs
@@ -4153,14 +4153,18 @@ exports.getLatestResolver = getLatestResolver;
 /***/ }),
 
 /***/ 1826:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.saveStackYaml = exports.setExtraDeps = exports.getExtraDeps = exports.updateResolver = exports.getStackYaml = void 0;
 const yaml_1 = __nccwpck_require__(4083);
 const fs_1 = __nccwpck_require__(7147);
+const path_1 = __importDefault(__nccwpck_require__(1017));
 const getStackYaml = async (stackYamlPath) => {
     const yaml = await fs_1.promises.readFile(stackYamlPath, 'utf8');
     const doc = (0, yaml_1.parseDocument)(yaml);
@@ -4196,6 +4200,8 @@ const setExtraDeps = async (doc, extraDeps) => {
 exports.setExtraDeps = setExtraDeps;
 const saveStackYaml = async (doc, stackYamlPath) => {
     const yaml = doc.toString();
+    const dirname = path_1.default.dirname(stackYamlPath);
+    await fs_1.promises.mkdir(dirname, { recursive: true });
     return await fs_1.promises.writeFile(stackYamlPath, yaml);
 };
 exports.saveStackYaml = saveStackYaml;

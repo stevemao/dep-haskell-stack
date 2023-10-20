@@ -1,5 +1,6 @@
 import { parseDocument, Document, YAMLSeq } from 'yaml'
 import { promises as fs } from 'fs'
+import path from 'path'
 
 export const getStackYaml = async (
   stackYamlPath: string
@@ -54,5 +55,9 @@ export const saveStackYaml = async (
   stackYamlPath: string
 ): Promise<void> => {
   const yaml = doc.toString()
+
+  const dirname = path.dirname(stackYamlPath)
+  await fs.mkdir(dirname, { recursive: true })
+
   return await fs.writeFile(stackYamlPath, yaml)
 }
