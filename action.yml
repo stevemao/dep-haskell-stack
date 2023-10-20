@@ -1,6 +1,9 @@
 name: 'Dependabot Haskell Stack'
 description: 'Update Haskell Stack dependencies'
 author: 'Steve Mao'
+branding:
+  icon: 'chevrons-up'
+  color: 'purple'
 
 # Define your inputs here.
 inputs:
