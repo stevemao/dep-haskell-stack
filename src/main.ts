@@ -1,5 +1,14 @@
 import * as core from '@actions/core'
-import { wait } from './wait'
+import * as exec from '@actions/exec'
+import { getLatestResolver } from './resolver'
+import {
+  getExtraDeps,
+  getStackYaml,
+  saveStackYaml,
+  setExtraDeps,
+  updateResolver
+} from './yaml'
+import { getLatestVersion } from './extra-deps'
 
 /**
  * The main function for the action.
@@ -7,20 +16,54 @@ import { wait } from './wait'
  */
 export async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
+    const stackYaml: string = core.getInput('stack-yaml')
+    const stackYamlLock = `${stackYaml}.lock`
+    core.debug(`stack-yaml: ${stackYaml}`)
+    core.debug(`stack-yaml-lock: ${stackYamlLock}`)
 
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Waiting ${ms} milliseconds ...`)
+    core.debug('Getting latest resolver')
+    const resolver = await getLatestResolver()
+    core.debug(`Latest resolver: ${resolver}`)
 
-    // Log the current timestamp, wait, then log the new timestamp
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    core.debug('Get the stack.yaml file')
+    const doc = await getStackYaml(stackYaml)
+    const updatedResolver = updateResolver(doc, resolver)
+    core.debug(`Updated resolver: ${updatedResolver}`)
+
+    core.debug('get the extra-deps')
+    const extraDeps = await getExtraDeps(doc)
+    const updatedExtraDeps = await Promise.all(
+      extraDeps.map(async dep => {
+        core.debug(`extra-deps: ${dep.name} ${dep.version}`)
+
+        core.debug('get latest version')
+        const latestVersion = await getLatestVersion(dep.name)
+        return { name: dep.name, version: latestVersion }
+      })
+    )
+
+    core.debug('set the extra-deps')
+    const updated = await setExtraDeps(doc, updatedExtraDeps)
+    core.debug('write the stack.yaml file')
+    await saveStackYaml(updated, stackYaml)
+
+    core.debug('regenerate the stack.yaml.lock file')
+    await exec.exec('stack', [
+      'build',
+      '--dry-run',
+      '--stack-yaml',
+      stackYaml,
+      '--dependencies-only'
+    ])
 
     // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
+    // core.setOutput()
   } catch (error) {
     // Fail the workflow run if an error occurs
-    if (error instanceof Error) core.setFailed(error.message)
+    if (error instanceof Error) {
+      core.setFailed(error.message)
+    } else {
+      core.setFailed(String(error))
+    }
   }
 }
