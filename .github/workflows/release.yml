@@ -1,0 +1,20 @@
+name: 'release'
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Generate release notes
+        run: git show HEAD --format='%s%n%n%b' -s > .release_body
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          body_path: .release_body
