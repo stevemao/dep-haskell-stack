@@ -1,18 +1,17 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Dependabot Haskell Stack'
+description: 'Update Haskell Stack dependencies'
+author: 'Steve Mao'
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
-    required: true
-    default: '1000'
+  stack-yaml:
+    description: 'Override project stack.yaml file (overrides any STACK_YAML environment variable).'
+    default: './stack.yaml'
 
 # Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
+  resolver:
+    description: 'The latest resolver'
 
 runs:
   using: node20

@@ -160,11 +160,7 @@ steps:
     id: test-action
     uses: ./
     with:
-      milliseconds: 1000
-
-  - name: Print Output
-    id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
+      stack-yaml: './stack.yaml'
 ```
 
 For example workflow runs, check out the
@@ -191,9 +187,5 @@ steps:
     id: test-action
     uses: actions/typescript-action@v1 # Commit with the `v1` tag
     with:
-      milliseconds: 1000
-
-  - name: Print Output
-    id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
+      stack-yaml: './stack.yaml'
 ```

@@ -1,0 +1,141 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.2.
+--
+-- see: https://github.com/sol/hpack
+
+name:           dep-haskell-stack
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/stevemao/dep-haskell-stack#readme>
+homepage:       https://github.com/stevemao/dep-haskell-stack#readme
+bug-reports:    https://github.com/stevemao/dep-haskell-stack/issues
+author:         Steve Mao
+maintainer:     example@example.com
+copyright:      2023 Steve Mao
+license:        BSD3
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/stevemao/dep-haskell-stack
+
+library
+  other-modules:
+      Paths_dep_haskell_stack
+  hs-source-dirs:
+      src
+  default-extensions:
+      OverloadedStrings
+      DataKinds
+      FlexibleContexts
+      GADTs
+      LambdaCase
+      PolyKinds
+      RankNTypes
+      ScopedTypeVariables
+      TypeApplications
+      TypeOperators
+      TypeFamilies
+      TemplateHaskell
+  ghc-options: -Wall -O2 -flate-specialise -fspecialise-aggressively -fplugin=Polysemy.Plugin
+  build-depends:
+      aeson
+    , amazonka
+    , amazonka-apigatewaymanagementapi
+    , amazonka-s3
+    , amazonka-ses
+    , attoparsec
+    , base >=4.7 && <5
+    , base16-bytestring
+    , base64-bytestring
+    , binary
+    , binary-instances
+    , blaze-html
+    , bytestring
+    , case-insensitive
+    , conduit
+    , conduit-extra
+    , containers
+    , cryptonite
+    , directory
+    , dlist
+    , exceptions
+    , filepath
+    , generic-lens
+    , hashable
+    , hedis
+    , html-entities
+    , http-api-data
+    , http-client
+    , http-conduit
+    , http-media
+    , http-types
+    , jose
+    , lens
+    , memory
+    , mime-types
+    , monad-time
+    , mtl
+    , multipart
+    , network-uri
+    , opaleye
+    , polysemy
+    , polysemy-plugin
+    , polysemy-zoo
+    , postgresql-simple
+    , product-profunctors
+    , profunctors
+    , resourcet
+    , safe
+    , safe-exceptions-checked
+    , scientific
+    , servant
+    , shakespeare
+    , string-random
+    , template-haskell
+    , text
+    , text-show
+    , text-show-instances
+    , time
+    , time-compat
+    , transformers
+    , unix
+    , unliftio-core
+    , unordered-containers
+    , uuid
+    , vector
+    , websockets
+    , x509
+    , x509-store
+  default-language: Haskell2010
+
+test-suite dep-haskell-stack-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_dep_haskell_stack
+  hs-source-dirs:
+      test
+  default-extensions:
+      OverloadedStrings
+      StandaloneDeriving
+  ghc-options: -Wall -O2 -flate-specialise -fspecialise-aggressively -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      QuickCheck
+    , aeson
+    , base >=4.7 && <5
+    , bytestring
+    , extra
+    , generic-arbitrary
+    , hspec
+    , multipart
+    , quickcheck-instances
+    , safe
+    , text
+    , text-show
+    , uuid
+    , vector
+  default-language: Haskell2010

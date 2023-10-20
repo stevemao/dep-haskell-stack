@@ -1,0 +1,142 @@
+name:                dep-haskell-stack
+version:             0.1.0.0
+github:              "stevemao/dep-haskell-stack"
+license:             BSD3
+author:              "Steve Mao"
+maintainer:          "example@example.com"
+copyright:           "2023 Steve Mao"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/stevemao/dep-haskell-stack#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+ghc-options:
+  - -Wall
+  - -O2 
+  - -flate-specialise 
+  - -fspecialise-aggressively
+
+default-extensions:
+  - OverloadedStrings
+
+library:
+  source-dirs: src
+  ghc-options:
+  - -fplugin=Polysemy.Plugin
+  dependencies:
+  - aeson
+  - unordered-containers
+  - product-profunctors
+  - text
+  - scientific
+  - containers
+  - polysemy
+  - polysemy-zoo
+  - polysemy-plugin
+  - bytestring
+  - opaleye
+  - http-conduit
+  - http-client
+  - network-uri
+  - hedis
+  - postgresql-simple
+  - uuid
+  - safe
+  - vector
+  - amazonka
+  - amazonka-ses
+  - amazonka-s3
+  - amazonka-apigatewaymanagementapi
+  - shakespeare
+  - blaze-html
+  - profunctors
+  - time
+  - binary
+  - lens
+  - unix
+  - case-insensitive
+  - string-random
+  - cryptonite
+  - exceptions
+  - binary-instances
+  - websockets
+  - base16-bytestring
+  - base64-bytestring
+  - html-entities
+  - text-show
+  - text-show-instances
+  - transformers
+  - jose
+  - monad-time
+  - http-types
+  - conduit-extra
+  - http-api-data
+  - hashable
+  - servant
+  - attoparsec
+  - dlist
+  - resourcet
+  - conduit
+  - http-media
+  - memory
+  - x509
+  - x509-store
+  - directory
+  - filepath
+  - mtl
+  - mime-types
+  - unliftio-core
+  - safe-exceptions-checked
+  - generic-lens
+  - multipart
+  - time-compat
+  - template-haskell
+  default-extensions:
+  - DataKinds
+  - FlexibleContexts
+  - GADTs
+  - LambdaCase
+  - PolyKinds
+  - RankNTypes
+  - ScopedTypeVariables
+  - TypeApplications
+  - TypeOperators
+  - TypeFamilies
+  - TemplateHaskell
+
+tests:
+  dep-haskell-stack-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - hspec
+    - QuickCheck
+    - quickcheck-instances
+    - generic-arbitrary
+    - aeson
+    - text
+    - uuid
+    - bytestring
+    - multipart
+    - extra
+    - vector
+    - safe
+    - text-show
+    default-extensions:
+    - StandaloneDeriving
