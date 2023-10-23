@@ -11,6 +11,10 @@ export const getStackYaml = async (
   return doc
 }
 
+export const getResolver = (doc: Document): string => {
+  return doc.get('resolver') as string
+}
+
 export const updateResolver = (doc: Document, resolver: string): Document => {
   doc.set('resolver', resolver)
   return doc
