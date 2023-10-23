@@ -53,7 +53,9 @@ export async function run(): Promise<void> {
       '--dry-run',
       '--stack-yaml',
       stackYaml,
-      '--dependencies-only'
+      '--dependencies-only',
+      '--skip-ghc-check',
+      '--system-ghc'
     ])
 
     // Set outputs for other workflow steps to use
