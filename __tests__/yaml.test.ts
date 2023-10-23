@@ -4,6 +4,7 @@
 
 import {
   getExtraDeps,
+  getResolver,
   getStackYaml,
   saveStackYaml,
   setExtraDeps,
@@ -16,6 +17,12 @@ describe('yaml.ts', () => {
     const doc = await getStackYaml(`${__dirname}/fixtures/stack.yaml`)
 
     expect(doc.get('resolver')).toBe('lts-21.16')
+  })
+
+  it('should get the resolver from stack.yaml', async () => {
+    const doc = await getStackYaml(`${__dirname}/fixtures/stack.yaml`)
+
+    expect(getResolver(doc)).toBe('lts-21.16')
   })
 
   it('should update the resolver', async () => {

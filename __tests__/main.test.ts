@@ -8,6 +8,7 @@
 
 import * as core from '@actions/core'
 import * as main from '../src/main'
+import * as exec from '@actions/exec'
 
 // Mock the GitHub Actions core library
 // const debugMock = jest.spyOn(core, 'debug')
@@ -23,6 +24,10 @@ const runMock = jest.spyOn(main, 'run')
 describe('action', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+  })
+
+  afterEach(async () => {
+    await exec.exec('git', ['checkout', '__tests__/fixtures'])
   })
 
   it('runs the whole pipeline', async () => {

@@ -4046,38 +4046,47 @@ const extra_deps_1 = __nccwpck_require__(5540);
 async function run() {
     try {
         const stackYaml = core.getInput('stack-yaml');
-        const stackYamlLock = `${stackYaml}.lock`;
         core.debug(`stack-yaml: ${stackYaml}`);
-        core.debug(`stack-yaml-lock: ${stackYamlLock}`);
         core.debug('Getting latest resolver');
-        const resolver = await (0, resolver_1.getLatestResolver)();
-        core.debug(`Latest resolver: ${resolver}`);
-        core.debug('Get the stack.yaml file');
+        const newResolver = await (0, resolver_1.getLatestResolver)();
+        core.debug(`Latest resolver: ${newResolver}`);
+        core.debug('Geting the stack.yaml file');
         const doc = await (0, yaml_1.getStackYaml)(stackYaml);
-        const updatedResolver = (0, yaml_1.updateResolver)(doc, resolver);
+        core.debug(`stack.yaml: ${doc}`);
+        const previousResolver = (0, yaml_1.getResolver)(doc);
+        core.debug('Updating the resolver');
+        const updatedResolver = (0, yaml_1.updateResolver)(doc, newResolver);
         core.debug(`Updated resolver: ${updatedResolver}`);
-        core.debug('get the extra-deps');
+        core.debug('Getting the extra-deps');
         const extraDeps = await (0, yaml_1.getExtraDeps)(doc);
+        core.debug(`extra-deps: ${extraDeps}`);
+        core.debug('Getting the latest versions of the extra-deps');
         const updatedExtraDeps = await Promise.all(extraDeps.map(async (dep) => {
             core.debug(`extra-deps: ${dep.name} ${dep.version}`);
-            core.debug('get latest version');
+            core.debug('Getting the latest version');
             const latestVersion = await (0, extra_deps_1.getLatestVersion)(dep.name);
+            core.debug(`Latest version: ${latestVersion}`);
             return { name: dep.name, version: latestVersion };
         }));
-        core.debug('set the extra-deps');
+        core.debug(`Latest versions of the extra-deps: ${updatedExtraDeps}`);
+        core.debug('Setting the extra-deps');
         const updated = await (0, yaml_1.setExtraDeps)(doc, updatedExtraDeps);
-        core.debug('write the stack.yaml file');
+        core.debug(`extra-deps: ${updated}`);
+        core.debug('Writing the stack.yaml file');
         await (0, yaml_1.saveStackYaml)(updated, stackYaml);
-        core.debug('regenerate the stack.yaml.lock file');
+        core.debug('Regenerating the stack.yaml.lock file');
         await exec.exec('stack', [
             'build',
             '--dry-run',
             '--stack-yaml',
             stackYaml,
-            '--dependencies-only'
+            '--dependencies-only',
+            '--skip-ghc-check',
+            '--system-ghc'
         ]);
         // Set outputs for other workflow steps to use
-        core.setOutput('resolver', resolver);
+        core.setOutput('previous-resolver', previousResolver);
+        core.setOutput('new-resolver', newResolver);
     }
     catch (error) {
         // Fail the workflow run if an error occurs
@@ -4161,7 +4170,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.saveStackYaml = exports.setExtraDeps = exports.getExtraDeps = exports.updateResolver = exports.getStackYaml = void 0;
+exports.saveStackYaml = exports.setExtraDeps = exports.getExtraDeps = exports.updateResolver = exports.getResolver = exports.getStackYaml = void 0;
 const yaml_1 = __nccwpck_require__(4083);
 const fs_1 = __nccwpck_require__(7147);
 const path_1 = __importDefault(__nccwpck_require__(1017));
@@ -4171,6 +4180,10 @@ const getStackYaml = async (stackYamlPath) => {
     return doc;
 };
 exports.getStackYaml = getStackYaml;
+const getResolver = (doc) => {
+    return doc.get('resolver');
+};
+exports.getResolver = getResolver;
 const updateResolver = (doc, resolver) => {
     doc.set('resolver', resolver);
     return doc;

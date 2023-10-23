@@ -13,8 +13,10 @@ inputs:
 
 # Define your outputs here.
 outputs:
-  resolver:
-    description: 'The latest resolver'
+  previous-resolver:
+    description: 'The previous resolver'
+  new-resolver:
+    description: 'The new resolver'
 
 runs:
   using: node20
