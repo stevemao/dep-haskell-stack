@@ -1,3 +1,5 @@
+# Dependabot Haskell Stack
+
 ```yaml
 name: Update Haskell Stack dependencies
 
