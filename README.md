@@ -50,11 +50,11 @@ jobs:
           branch: '${{vars.AL_VERSION}}-${{steps.bump-deps.outputs.new-resolver}}'
           token: ${{ env.GITHUB_TOKEN }}
           commit-message:
-            'Update resolver from ${{steps.bump-deps.outputs.old-resolver}} to
-            ${{steps.bump-deps.outputs.new-resolver}}'
+            'Update resolver from ${{steps.bump-deps.outputs.previous-resolver}}
+            to ${{steps.bump-deps.outputs.new-resolver}}'
           title:
-            'Update resolver from ${{steps.bump-deps.outputs.old-resolver}} to
-            ${{steps.bump-deps.outputs.new-resolver}}'
+            'Update resolver from ${{steps.bump-deps.outputs.previous-resolver}}
+            to ${{steps.bump-deps.outputs.new-resolver}}'
 
       - name: Enable auto-merge for Dependabot PRs
         if: steps.pr.outputs.pull-request-url
