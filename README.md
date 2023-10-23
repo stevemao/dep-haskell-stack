@@ -1,5 +1,16 @@
 # Dependabot Haskell Stack
 
+## Description
+
+This action updates Haskell Stack dependencies to the latest version.
+
+- Bump Haskell Stack resolver
+- Bump extra-deps
+
+It will update the versions in both `stack.yaml` and `stack.yaml.lock`.
+
+## Usage
+
 ```yaml
 name: Update Haskell Stack dependencies
 
@@ -30,7 +41,7 @@ jobs:
 
       - name: Update stack dependencies
         id: bump-deps
-        uses: stevemao/dep-haskell-stack@v2
+        uses: stevemao/dep-haskell-stack@v2.0.0
 
       - name: Create Pull Request
         id: pr
