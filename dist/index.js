@@ -4080,9 +4080,7 @@ async function run() {
             '--dry-run',
             '--stack-yaml',
             stackYaml,
-            '--dependencies-only',
-            '--skip-ghc-check',
-            '--system-ghc'
+            '--dependencies-only'
         ]);
         // Set outputs for other workflow steps to use
         core.setOutput('previous-resolver', previousResolver);
