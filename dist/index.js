@@ -4059,7 +4059,7 @@ async function run() {
         core.debug(`Updated resolver: ${updatedResolver}`);
         core.debug('Getting the extra-deps');
         const extraDeps = await (0, yaml_1.getExtraDeps)(doc);
-        core.debug(`extra-deps: ${extraDeps}`);
+        core.debug(`extra-deps: ${JSON.stringify(extraDeps)}`);
         core.debug('Getting the latest versions of the extra-deps');
         const updatedExtraDeps = await Promise.all(extraDeps.map(async (dep) => {
             core.debug(`extra-deps: ${dep.name} ${dep.version}`);
@@ -4085,6 +4085,8 @@ async function run() {
         // Set outputs for other workflow steps to use
         core.setOutput('previous-resolver', previousResolver);
         core.setOutput('new-resolver', newResolver);
+        core.setOutput('previous-extra-deps', extraDeps);
+        core.setOutput('new-extra-deps', updatedExtraDeps);
     }
     catch (error) {
         // Fail the workflow run if an error occurs
