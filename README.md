@@ -38,6 +38,7 @@ jobs:
         uses: haskell-actions/setup@v2
         with:
           enable-stack: true
+          stack-no-global: true
 
       - name: Update stack dependencies
         id: bump-deps
