@@ -47,19 +47,6 @@ jobs:
         id: build
         run: npm run bundle
 
-      - name: Compare Expected and Actual Directories
-        id: diff
-        run: |
-          if [ "$(git diff --ignore-space-at-eol --text dist/ | wc -l)" -gt "0" ]; then
-            echo "Detected uncommitted changes after build. See status below:"
-            git diff --ignore-space-at-eol --text dist/
-            exit 1
-          fi
-
-      # If index.js was different than expected, upload the expected version as
-      # a workflow artifact.
-      - uses: actions/upload-artifact@v3
-        if: ${{ failure() && steps.diff.conclusion == 'failure' }}
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          name: dist
-          path: dist/
+          commit_message: "Update dist"
