@@ -2,7 +2,8 @@
 
 ## Description
 
-This action updates Haskell Stack dependencies to the latest LTS version.
+This action updates Haskell Stack dependencies to the latest LTS or Nightly
+version.
 
 - Bump Haskell Stack resolver
 - Bump extra-deps

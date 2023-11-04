@@ -36,6 +36,7 @@ extends:
 
 rules:
   {
+    'no-shadow': 'off',
     'camelcase': 'off',
     'eslint-comments/no-use': 'off',
     'eslint-comments/no-unused-disable': 'off',
@@ -79,5 +80,6 @@ rules:
     '@typescript-eslint/semi': ['error', 'never'],
     '@typescript-eslint/space-before-function-paren': 'off',
     '@typescript-eslint/type-annotation-spacing': 'error',
-    '@typescript-eslint/unbound-method': 'error'
+    '@typescript-eslint/unbound-method': 'error',
+    "@typescript-eslint/no-shadow": 'error'
   }
