@@ -4047,13 +4047,13 @@ async function run() {
     try {
         const stackYaml = core.getInput('stack-yaml');
         core.debug(`stack-yaml: ${stackYaml}`);
-        core.debug('Getting latest resolver');
-        const newResolver = await (0, resolver_1.getLatestResolver)();
-        core.debug(`Latest resolver: ${newResolver}`);
         core.debug('Geting the stack.yaml file');
         const doc = await (0, yaml_1.getStackYaml)(stackYaml);
         core.debug(`stack.yaml: ${doc}`);
         const previousResolver = (0, yaml_1.getResolver)(doc);
+        core.debug('Getting latest resolver');
+        const newResolver = await (0, resolver_1.getLatestResolver)(previousResolver);
+        core.debug(`Latest resolver: ${newResolver}`);
         core.debug('Updating the resolver');
         const updatedResolver = (0, yaml_1.updateResolver)(doc, newResolver);
         core.debug(`Updated resolver: ${updatedResolver}`);
@@ -4132,19 +4132,23 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getLatestResolver = void 0;
+exports.getLatestResolver = exports.isLTS = void 0;
 const httpm = __importStar(__nccwpck_require__(6255));
-const findFirstLTSVersion = (data) => {
+const findLatestVersion = (data, lts) => {
     for (const snapshot of data.snapshots) {
         for (const versions of snapshot) {
-            if (versions[0].startsWith('lts')) {
+            if (versions[0].startsWith(lts)) {
                 return versions[0];
             }
         }
     }
     throw Error('No LTS version found');
 };
-const getLatestResolver = async () => {
+const isLTS = (resolver) => {
+    return resolver.startsWith('lts');
+};
+exports.isLTS = isLTS;
+const getLatestResolver = async (resolver) => {
     const http = new httpm.HttpClient('get-resolvers', [], {
         headers: {
             Accept: 'application/json',
@@ -4154,7 +4158,10 @@ const getLatestResolver = async () => {
     const res = await http.get('https://www.stackage.org/snapshots');
     const body = await res.readBody();
     const obj = JSON.parse(body);
-    return findFirstLTSVersion(obj);
+    if ((0, exports.isLTS)(resolver)) {
+        return findLatestVersion(obj, 'lts');
+    }
+    return findLatestVersion(obj, 'nightly');
 };
 exports.getLatestResolver = getLatestResolver;
 
@@ -6756,7 +6763,7 @@ class Directives {
                 onError('Verbatim tags must end with a >');
             return verbatim;
         }
-        const [, handle, suffix] = source.match(/^(.*!)([^!]*)$/s);
+        const [, handle, suffix] = source.match(/^(.*!)([^!]*)$/);
         if (!suffix)
             onError(`The ${source} tag has no suffix`);
         const prefix = this.tags[handle];

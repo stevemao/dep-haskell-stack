@@ -20,15 +20,15 @@ export async function run(): Promise<void> {
     const stackYaml: string = core.getInput('stack-yaml')
     core.debug(`stack-yaml: ${stackYaml}`)
 
-    core.debug('Getting latest resolver')
-    const newResolver = await getLatestResolver()
-    core.debug(`Latest resolver: ${newResolver}`)
-
     core.debug('Geting the stack.yaml file')
     const doc = await getStackYaml(stackYaml)
     core.debug(`stack.yaml: ${doc}`)
 
     const previousResolver = getResolver(doc)
+
+    core.debug('Getting latest resolver')
+    const newResolver = await getLatestResolver(previousResolver)
+    core.debug(`Latest resolver: ${newResolver}`)
 
     core.debug('Updating the resolver')
     const updatedResolver = updateResolver(doc, newResolver)
