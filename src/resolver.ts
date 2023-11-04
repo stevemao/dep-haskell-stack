@@ -5,10 +5,15 @@ interface Data {
   totalCount: number
 }
 
-const findLatestVersion = (data: Data, lts: string): string => {
+export enum ResolverType {
+  LTS = 'lts',
+  Nightly = 'nightly'
+}
+
+const findLatestVersion = (data: Data, resolverType: ResolverType): string => {
   for (const snapshot of data.snapshots) {
     for (const versions of snapshot) {
-      if (versions[0].startsWith(lts)) {
+      if (versions[0].startsWith(resolverType)) {
         return versions[0]
       }
     }
@@ -18,7 +23,7 @@ const findLatestVersion = (data: Data, lts: string): string => {
 }
 
 export const isLTS = (resolver: string): boolean => {
-  return resolver.startsWith('lts')
+  return resolver.startsWith(ResolverType.LTS)
 }
 
 export const getLatestResolver = async (resolver: string): Promise<string> => {
@@ -35,8 +40,8 @@ export const getLatestResolver = async (resolver: string): Promise<string> => {
   const obj = JSON.parse(body)
 
   if (isLTS(resolver)) {
-    return findLatestVersion(obj, 'lts')
+    return findLatestVersion(obj, ResolverType.LTS)
   }
 
-  return findLatestVersion(obj, 'nightly')
+  return findLatestVersion(obj, ResolverType.Nightly)
 }

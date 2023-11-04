@@ -2,7 +2,7 @@
  * Unit tests for src/resolver.ts
  */
 
-import { getLatestResolver } from '../src/resolver'
+import { ResolverType, getLatestResolver } from '../src/resolver'
 import { expect } from '@jest/globals'
 
 describe('resolver.ts', () => {
@@ -11,7 +11,7 @@ describe('resolver.ts', () => {
 
     const [lts, ...version] = resolver.split('-')
 
-    expect(lts).toBe('lts')
+    expect(lts).toBe(ResolverType.LTS)
     expect(parseFloat(version.join('-'))).toBeGreaterThanOrEqual(21.16)
   })
 
@@ -20,7 +20,7 @@ describe('resolver.ts', () => {
 
     const [lts, ...version] = resolver.split('-')
 
-    expect(lts).toBe('nightly')
+    expect(lts).toBe(ResolverType.Nightly)
     expect(version.join('-')).toBe('2023-11-04')
   })
 })
