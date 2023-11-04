@@ -4132,12 +4132,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getLatestResolver = exports.isLTS = void 0;
+exports.getLatestResolver = exports.isLTS = exports.ResolverType = void 0;
 const httpm = __importStar(__nccwpck_require__(6255));
-const findLatestVersion = (data, lts) => {
+var ResolverType;
+(function (ResolverType) {
+    ResolverType["LTS"] = "lts";
+    ResolverType["Nightly"] = "nightly";
+})(ResolverType || (exports.ResolverType = ResolverType = {}));
+const findLatestVersion = (data, resolverType) => {
     for (const snapshot of data.snapshots) {
         for (const versions of snapshot) {
-            if (versions[0].startsWith(lts)) {
+            if (versions[0].startsWith(resolverType)) {
                 return versions[0];
             }
         }
@@ -4145,7 +4150,7 @@ const findLatestVersion = (data, lts) => {
     throw Error('No LTS version found');
 };
 const isLTS = (resolver) => {
-    return resolver.startsWith('lts');
+    return resolver.startsWith(ResolverType.LTS);
 };
 exports.isLTS = isLTS;
 const getLatestResolver = async (resolver) => {
@@ -4159,9 +4164,9 @@ const getLatestResolver = async (resolver) => {
     const body = await res.readBody();
     const obj = JSON.parse(body);
     if ((0, exports.isLTS)(resolver)) {
-        return findLatestVersion(obj, 'lts');
+        return findLatestVersion(obj, ResolverType.LTS);
     }
-    return findLatestVersion(obj, 'nightly');
+    return findLatestVersion(obj, ResolverType.Nightly);
 };
 exports.getLatestResolver = getLatestResolver;
 
@@ -6763,7 +6768,7 @@ class Directives {
                 onError('Verbatim tags must end with a >');
             return verbatim;
         }
-        const [, handle, suffix] = source.match(/^(.*!)([^!]*)$/);
+        const [, handle, suffix] = source.match(/^(.*!)([^!]*)$/s);
         if (!suffix)
             onError(`The ${source} tag has no suffix`);
         const prefix = this.tags[handle];
