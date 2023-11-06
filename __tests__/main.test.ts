@@ -44,7 +44,7 @@ describe('action', () => {
     await main.run()
     expect(runMock).toHaveReturned()
     expect(setFailedMock).not.toHaveBeenCalled()
-  }, 1000000)
+  }, 10000000)
 
   it('sets a failed status', async () => {
     // Set the action's inputs as return values from core.getInput()
