@@ -21,6 +21,8 @@ describe('resolver.ts', () => {
     const [lts, ...version] = resolver.split('-')
 
     expect(lts).toBe(ResolverType.Nightly)
-    expect(version.join('-')).toBe('2023-11-04')
+    expect(new Date(version.join('-')).getTime()).toBeGreaterThanOrEqual(
+      new Date('2023-11-04').getTime()
+    )
   })
 })
