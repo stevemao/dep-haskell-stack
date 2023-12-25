@@ -4062,13 +4062,13 @@ async function run() {
         core.debug(`extra-deps: ${JSON.stringify(extraDeps)}`);
         core.debug('Getting the latest versions of the extra-deps');
         const updatedExtraDeps = await Promise.all(extraDeps.map(async (dep) => {
-            core.debug(`extra-deps: ${dep.name} ${dep.version}`);
+            core.debug(`Current version: ${dep.name}@${dep.version}`);
             core.debug('Getting the latest version');
             const latestVersion = await (0, extra_deps_1.getLatestVersion)(dep.name);
-            core.debug(`Latest version: ${latestVersion}`);
+            core.debug(`Latest version: ${dep.name}@${latestVersion}`);
             return { name: dep.name, version: latestVersion };
         }));
-        core.debug(`Latest versions of the extra-deps: ${updatedExtraDeps}`);
+        core.debug(`Latest versions of the extra-deps: ${JSON.stringify(updatedExtraDeps)}`);
         core.debug('Setting the extra-deps');
         const updated = await (0, yaml_1.setExtraDeps)(doc, updatedExtraDeps);
         core.debug(`extra-deps: ${updated}`);
