@@ -4078,19 +4078,29 @@ async function run() {
         core.debug(`extra-deps: ${updated}`);
         core.debug('Writing the stack.yaml file');
         await (0, yaml_1.saveStackYaml)(updated, stackYaml);
-        core.debug('Regenerating the stack.yaml.lock file');
-        await exec.exec('stack', [
-            'build',
-            '--dry-run',
-            '--stack-yaml',
-            stackYaml,
-            '--dependencies-only'
-        ]);
-        // Set outputs for other workflow steps to use
-        core.setOutput('previous-resolver', previousResolver);
-        core.setOutput('new-resolver', newResolver);
-        core.setOutput('previous-extra-deps', extraDeps);
-        core.setOutput('new-extra-deps', updatedExtraDeps);
+        try {
+            core.debug('Regenerating the stack.yaml.lock file');
+            await exec.exec('stack', [
+                'build',
+                '--dry-run',
+                '--stack-yaml',
+                stackYaml,
+                '--dependencies-only'
+            ]);
+            // Set outputs for other workflow steps to use
+            core.setOutput('previous-resolver', previousResolver);
+            core.setOutput('new-resolver', newResolver);
+            core.setOutput('previous-extra-deps', extraDeps);
+            core.setOutput('new-extra-deps', updatedExtraDeps);
+        }
+        catch (e) {
+            core.info('Cannot regenerate stack.yaml.lock file, new dependencies are not compatible');
+            core.warning(String(e));
+            core.setOutput('previous-resolver', previousResolver);
+            core.setOutput('new-resolver', previousResolver);
+            core.setOutput('previous-extra-deps', extraDeps);
+            core.setOutput('new-extra-deps', extraDeps);
+        }
     }
     catch (error) {
         // Fail the workflow run if an error occurs
