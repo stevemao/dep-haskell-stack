@@ -18,42 +18,42 @@ import { getLatestVersion } from './extra-deps'
 export async function run(): Promise<void> {
   try {
     const stackYaml: string = core.getInput('stack-yaml')
-    core.debug(`stack-yaml: ${stackYaml}`)
+    core.debug("stack-yaml", stackYaml)
 
     core.debug('Geting the stack.yaml file')
     const doc = await getStackYaml(stackYaml)
-    core.debug(`stack.yaml: ${doc}`)
+    core.debug("stack.yaml", doc)
 
     const previousResolver = getResolver(doc)
 
     core.debug('Getting latest resolver')
     const newResolver = await getLatestResolver(previousResolver)
-    core.debug(`Latest resolver: ${newResolver}`)
+    core.debug("Latest resolver", newResolver)
 
     core.debug('Updating the resolver')
     const updatedResolver = updateResolver(doc, newResolver)
-    core.debug(`Updated resolver: ${updatedResolver}`)
+    core.debug("Updated resolver", updatedResolver)
 
     core.debug('Getting the extra-deps')
     const extraDeps = await getExtraDeps(doc)
-    core.debug(`extra-deps: ${JSON.stringify(extraDeps)}`)
+    core.debug("extra-deps", extraDeps)
 
     core.debug('Getting the latest versions of the extra-deps')
     const updatedExtraDeps = await Promise.all(
       extraDeps.map(async dep => {
-        core.debug(`extra-deps: ${dep.name} ${dep.version}`)
+        core.debug('current version', dep.name, dep.version)
 
         core.debug('Getting the latest version')
         const latestVersion = await getLatestVersion(dep.name)
-        core.debug(`Latest version: ${latestVersion}`)
+        core.debug('Latest version', dep.name, latestVersion)
         return { name: dep.name, version: latestVersion }
       })
     )
-    core.debug(`Latest versions of the extra-deps: ${updatedExtraDeps}`)
+    core.debug("Latest versions of the extra-deps", updatedExtraDeps)
 
     core.debug('Setting the extra-deps')
     const updated = await setExtraDeps(doc, updatedExtraDeps)
-    core.debug(`extra-deps: ${updated}`)
+    core.debug("extra-deps", updated)
 
     core.debug('Writing the stack.yaml file')
     await saveStackYaml(updated, stackYaml)
