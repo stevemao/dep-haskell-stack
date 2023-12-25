@@ -60,3 +60,4 @@ jobs:
         uses: ./
         with:
           stack-yaml: './__tests__/fixtures/stack.yaml'
+          resolver-major: false
