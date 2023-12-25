@@ -4047,12 +4047,16 @@ async function run() {
     try {
         const stackYaml = core.getInput('stack-yaml');
         core.debug(`stack-yaml: ${stackYaml}`);
+        const bumpMajor = core.getInput('resolver-major').toLowerCase() === 'true';
+        core.debug(`resolver-major: ${bumpMajor}`);
+        const ghc = core.getInput('ghc');
+        core.debug(`ghc: ${ghc}`);
         core.debug('Geting the stack.yaml file');
         const doc = await (0, yaml_1.getStackYaml)(stackYaml);
         core.debug(`stack.yaml: ${doc}`);
         const previousResolver = (0, yaml_1.getResolver)(doc);
         core.debug('Getting latest resolver');
-        const newResolver = await (0, resolver_1.getLatestResolver)(previousResolver);
+        const newResolver = await (0, resolver_1.getLatestResolver)(previousResolver, bumpMajor, ghc);
         core.debug(`Latest resolver: ${newResolver}`);
         core.debug('Updating the resolver');
         const updatedResolver = (0, yaml_1.updateResolver)(doc, newResolver);
@@ -4132,41 +4136,66 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getLatestResolver = exports.isLTS = exports.ResolverType = void 0;
+exports.getLatestResolver = exports.getLTSVersion = exports.ResolverType = void 0;
 const httpm = __importStar(__nccwpck_require__(6255));
 var ResolverType;
 (function (ResolverType) {
     ResolverType["LTS"] = "lts";
     ResolverType["Nightly"] = "nightly";
 })(ResolverType || (exports.ResolverType = ResolverType = {}));
-const findLatestVersion = (data, resolverType) => {
-    for (const snapshot of data.snapshots) {
-        for (const versions of snapshot) {
-            if (versions[0].startsWith(resolverType)) {
-                return versions[0];
-            }
-        }
-    }
-    throw Error('No LTS version found');
-};
-const isLTS = (resolver) => {
-    return resolver.startsWith(ResolverType.LTS);
-};
-exports.isLTS = isLTS;
-const getLatestResolver = async (resolver) => {
+const findLatestVersion = async (resolverType, version, page = 1) => {
     const http = new httpm.HttpClient('get-resolvers', [], {
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
         }
     });
-    const res = await http.get('https://www.stackage.org/snapshots');
+    const res = await http.get(`https://www.stackage.org/snapshots?page=${page}`);
     const body = await res.readBody();
-    const obj = JSON.parse(body);
-    if ((0, exports.isLTS)(resolver)) {
-        return findLatestVersion(obj, ResolverType.LTS);
+    const data = JSON.parse(body);
+    if (data.snapshots.length === 0) {
+        throw Error('No resolvers found');
     }
-    return findLatestVersion(obj, ResolverType.Nightly);
+    for (const snapshot of data.snapshots) {
+        for (const versions of snapshot) {
+            const major = version.major || '';
+            if (versions[0].startsWith(`${resolverType}-${major}`)) {
+                if (version.ghc) {
+                    if (versions[1].includes(`ghc-${version.ghc}`)) {
+                        return versions[0];
+                    }
+                }
+                return versions[0];
+            }
+        }
+    }
+    return findLatestVersion(resolverType, version, page + 1);
+};
+const getLTSVersion = (resolver) => {
+    const isLTS = resolver.startsWith(ResolverType.LTS);
+    if (isLTS) {
+        const version = resolver.split('-')[1];
+        return {
+            major: version.split('.')[0],
+            resolverType: ResolverType.LTS
+        };
+    }
+    return {
+        resolverType: ResolverType.Nightly
+    };
+};
+exports.getLTSVersion = getLTSVersion;
+const getLatestResolver = async (resolver, bumpMajor, ghc) => {
+    const ltsVersion = (0, exports.getLTSVersion)(resolver);
+    if (ltsVersion.resolverType === ResolverType.LTS) {
+        return findLatestVersion(ltsVersion.resolverType, {
+            major: bumpMajor ? undefined : ltsVersion.major,
+            ghc
+        });
+    }
+    return findLatestVersion(ltsVersion.resolverType, {
+        ghc
+    });
 };
 exports.getLatestResolver = getLatestResolver;
 

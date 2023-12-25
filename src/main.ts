@@ -20,6 +20,13 @@ export async function run(): Promise<void> {
     const stackYaml: string = core.getInput('stack-yaml')
     core.debug(`stack-yaml: ${stackYaml}`)
 
+    const bumpMajor: boolean =
+      core.getInput('resolver-major').toLowerCase() === 'true'
+    core.debug(`resolver-major: ${bumpMajor}`)
+
+    const ghc: string | undefined = core.getInput('ghc')
+    core.debug(`ghc: ${ghc}`)
+
     core.debug('Geting the stack.yaml file')
     const doc = await getStackYaml(stackYaml)
     core.debug(`stack.yaml: ${doc}`)
@@ -27,7 +34,11 @@ export async function run(): Promise<void> {
     const previousResolver = getResolver(doc)
 
     core.debug('Getting latest resolver')
-    const newResolver = await getLatestResolver(previousResolver)
+    const newResolver = await getLatestResolver(
+      previousResolver,
+      bumpMajor,
+      ghc
+    )
     core.debug(`Latest resolver: ${newResolver}`)
 
     core.debug('Updating the resolver')

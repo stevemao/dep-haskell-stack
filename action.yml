@@ -10,6 +10,11 @@ inputs:
   stack-yaml:
     description: 'Override project stack.yaml file (overrides any STACK_YAML environment variable).'
     default: './stack.yaml'
+  resolver-major:
+    description: 'Bump major version of the resoler (LTS only).'
+    default: 'true'
+  ghc:
+    description: 'Specify the GHC version that the resolver should use.'
 
 # Define your outputs here.
 outputs:

@@ -36,6 +36,8 @@ describe('action', () => {
       switch (name) {
         case 'stack-yaml':
           return `${__dirname}/fixtures/stack.yaml`
+        case 'resolver-major':
+          return 'false'
         default:
           return ''
       }
