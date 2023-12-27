@@ -4087,8 +4087,6 @@ async function run() {
                 stackYaml,
                 '--dependencies-only'
             ]);
-            // revert the stack.yaml file
-            await (0, yaml_1.saveStackYaml)(doc, stackYaml);
             // Set outputs for other workflow steps to use
             core.setOutput('previous-resolver', previousResolver);
             core.setOutput('new-resolver', newResolver);
@@ -4096,7 +4094,8 @@ async function run() {
             core.setOutput('new-extra-deps', updatedExtraDeps);
         }
         catch (e) {
-            core.info('Cannot regenerate stack.yaml.lock file, new dependencies are not compatible');
+            core.info('Cannot regenerate stack.yaml.lock file, new dependencies are not compatible. Reverting the stack.yaml file...');
+            await (0, yaml_1.saveStackYaml)(doc, stackYaml);
             core.warning(String(e));
             core.setOutput('previous-resolver', previousResolver);
             core.setOutput('new-resolver', previousResolver);
