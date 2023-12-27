@@ -92,6 +92,13 @@ export async function run(): Promise<void> {
       )
 
       await saveStackYaml(originalDoc, stackYaml)
+      await exec.exec('stack', [
+        'build',
+        '--dry-run',
+        '--stack-yaml',
+        stackYaml,
+        '--dependencies-only'
+      ])
 
       core.warning(String(e))
       core.setOutput('previous-resolver', previousResolver)

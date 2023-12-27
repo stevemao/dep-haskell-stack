@@ -4096,6 +4096,13 @@ async function run() {
         catch (e) {
             core.info('Cannot regenerate stack.yaml.lock file, new dependencies are not compatible. Reverting the stack.yaml file...');
             await (0, yaml_1.saveStackYaml)(originalDoc, stackYaml);
+            await exec.exec('stack', [
+                'build',
+                '--dry-run',
+                '--stack-yaml',
+                stackYaml,
+                '--dependencies-only'
+            ]);
             core.warning(String(e));
             core.setOutput('previous-resolver', previousResolver);
             core.setOutput('new-resolver', previousResolver);
