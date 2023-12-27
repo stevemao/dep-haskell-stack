@@ -4,11 +4,12 @@ import path from 'path'
 
 export const getStackYaml = async (
   stackYamlPath: string
-): Promise<Document> => {
+): Promise<{ originalDoc: Document; doc: Document }> => {
   const yaml = await fs.readFile(stackYamlPath, 'utf8')
   const doc = parseDocument(yaml)
+  const originalDoc = parseDocument(yaml)
 
-  return doc
+  return { originalDoc, doc }
 }
 
 export const getResolver = (doc: Document): string => {

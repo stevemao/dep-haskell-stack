@@ -4052,7 +4052,7 @@ async function run() {
         const ghc = core.getInput('ghc');
         core.debug(`ghc: ${ghc}`);
         core.debug('Geting the stack.yaml file');
-        const doc = await (0, yaml_1.getStackYaml)(stackYaml);
+        const { doc, originalDoc } = await (0, yaml_1.getStackYaml)(stackYaml);
         core.debug(`stack.yaml: ${doc}`);
         const previousResolver = (0, yaml_1.getResolver)(doc);
         core.debug('Getting latest resolver');
@@ -4095,7 +4095,7 @@ async function run() {
         }
         catch (e) {
             core.info('Cannot regenerate stack.yaml.lock file, new dependencies are not compatible. Reverting the stack.yaml file...');
-            await (0, yaml_1.saveStackYaml)(doc, stackYaml);
+            await (0, yaml_1.saveStackYaml)(originalDoc, stackYaml);
             core.warning(String(e));
             core.setOutput('previous-resolver', previousResolver);
             core.setOutput('new-resolver', previousResolver);
@@ -4229,7 +4229,8 @@ const path_1 = __importDefault(__nccwpck_require__(1017));
 const getStackYaml = async (stackYamlPath) => {
     const yaml = await fs_1.promises.readFile(stackYamlPath, 'utf8');
     const doc = (0, yaml_1.parseDocument)(yaml);
-    return doc;
+    const originalDoc = (0, yaml_1.parseDocument)(yaml);
+    return { originalDoc, doc };
 };
 exports.getStackYaml = getStackYaml;
 const getResolver = (doc) => {

@@ -28,7 +28,7 @@ export async function run(): Promise<void> {
     core.debug(`ghc: ${ghc}`)
 
     core.debug('Geting the stack.yaml file')
-    const doc = await getStackYaml(stackYaml)
+    const { doc, originalDoc } = await getStackYaml(stackYaml)
     core.debug(`stack.yaml: ${doc}`)
 
     const previousResolver = getResolver(doc)
@@ -91,7 +91,7 @@ export async function run(): Promise<void> {
         'Cannot regenerate stack.yaml.lock file, new dependencies are not compatible. Reverting the stack.yaml file...'
       )
 
-      await saveStackYaml(doc, stackYaml)
+      await saveStackYaml(originalDoc, stackYaml)
 
       core.warning(String(e))
       core.setOutput('previous-resolver', previousResolver)
