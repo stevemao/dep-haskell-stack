@@ -4087,6 +4087,8 @@ async function run() {
                 stackYaml,
                 '--dependencies-only'
             ]);
+            // revert the stack.yaml file
+            await (0, yaml_1.saveStackYaml)(doc, stackYaml);
             // Set outputs for other workflow steps to use
             core.setOutput('previous-resolver', previousResolver);
             core.setOutput('new-resolver', newResolver);
