@@ -11,6 +11,14 @@ import {
 } from './yaml'
 import { getLatestVersion } from './extra-deps'
 
+const stackBuildArgs = (stackYaml: string): string[] => [
+  'build',
+  '--dry-run',
+  '--stack-yaml',
+  stackYaml,
+  '--dependencies-only'
+]
+
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -73,13 +81,7 @@ export async function run(): Promise<void> {
 
     try {
       core.debug('Regenerating the stack.yaml.lock file')
-      await exec.exec('stack', [
-        'build',
-        '--dry-run',
-        '--stack-yaml',
-        stackYaml,
-        '--dependencies-only'
-      ])
+      await exec.exec('stack', stackBuildArgs(stackYaml))
 
       // Set outputs for other workflow steps to use
       core.setOutput('previous-resolver', previousResolver)
@@ -92,13 +94,7 @@ export async function run(): Promise<void> {
       )
 
       await saveStackYaml(originalDoc, stackYaml)
-      await exec.exec('stack', [
-        'build',
-        '--dry-run',
-        '--stack-yaml',
-        stackYaml,
-        '--dependencies-only'
-      ])
+      await exec.exec('stack', stackBuildArgs(stackYaml))
 
       core.warning(String(e))
       core.setOutput('previous-resolver', previousResolver)

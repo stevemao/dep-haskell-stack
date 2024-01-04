@@ -4039,6 +4039,13 @@ const exec = __importStar(__nccwpck_require__(1514));
 const resolver_1 = __nccwpck_require__(2861);
 const yaml_1 = __nccwpck_require__(1826);
 const extra_deps_1 = __nccwpck_require__(5540);
+const stackBuildArgs = (stackYaml) => [
+    'build',
+    '--dry-run',
+    '--stack-yaml',
+    stackYaml,
+    '--dependencies-only'
+];
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -4080,13 +4087,7 @@ async function run() {
         await (0, yaml_1.saveStackYaml)(updated, stackYaml);
         try {
             core.debug('Regenerating the stack.yaml.lock file');
-            await exec.exec('stack', [
-                'build',
-                '--dry-run',
-                '--stack-yaml',
-                stackYaml,
-                '--dependencies-only'
-            ]);
+            await exec.exec('stack', stackBuildArgs(stackYaml));
             // Set outputs for other workflow steps to use
             core.setOutput('previous-resolver', previousResolver);
             core.setOutput('new-resolver', newResolver);
@@ -4096,13 +4097,7 @@ async function run() {
         catch (e) {
             core.info('Cannot regenerate stack.yaml.lock file, new dependencies are not compatible. Reverting the stack.yaml file...');
             await (0, yaml_1.saveStackYaml)(originalDoc, stackYaml);
-            await exec.exec('stack', [
-                'build',
-                '--dry-run',
-                '--stack-yaml',
-                stackYaml,
-                '--dependencies-only'
-            ]);
+            await exec.exec('stack', stackBuildArgs(stackYaml));
             core.warning(String(e));
             core.setOutput('previous-resolver', previousResolver);
             core.setOutput('new-resolver', previousResolver);
