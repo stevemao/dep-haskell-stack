@@ -36,10 +36,10 @@ jobs:
         id: install
         run: npm ci
 
-      - name: Build dist/ Directory
+      - name: Rebuild all
         id: build
-        run: npm run bundle
+        run: npm run all
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Update dist"
+          commit_message: 'Rebuild all'
