@@ -16,7 +16,7 @@ jobs:
       - name: Generate release notes
         run: git show HEAD --format='%s%n%n%b' -s > .release_body
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
           body_path: .release_body
