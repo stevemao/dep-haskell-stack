@@ -41,6 +41,14 @@ describe('yaml.ts', () => {
     expect(extraDeps[0].name).toBe('polysemy-zoo')
   })
 
+  it('should get an empty list of extra deps package info if no extra-deps is defined', async () => {
+    const { doc } = await getStackYaml(`${__dirname}/fixtures/stackNoExtraDeps.yaml`)
+
+    const extraDeps = await getExtraDeps(doc)
+
+    expect(extraDeps).toHaveLength(0)
+  })
+
   it('should set extra deps', async () => {
     const { doc } = await getStackYaml(`${__dirname}/fixtures/stack.yaml`)
 
