@@ -42,7 +42,9 @@ describe('yaml.ts', () => {
   })
 
   it('should get an empty list of extra deps package info if no extra-deps is defined', async () => {
-    const { doc } = await getStackYaml(`${__dirname}/fixtures/stackNoExtraDeps.yaml`)
+    const { doc } = await getStackYaml(
+      `${__dirname}/fixtures/stackNoExtraDeps.yaml`
+    )
 
     const extraDeps = await getExtraDeps(doc)
 
