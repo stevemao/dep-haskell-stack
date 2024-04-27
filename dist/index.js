@@ -4252,8 +4252,8 @@ function separateString(inputString) {
 }
 const getExtraDeps = async (doc) => {
     const extraDeps = doc.get('extra-deps');
-    const json = extraDeps.toJSON();
-    return json.map(separateString);
+    const json = extraDeps?.toJSON();
+    return (json || []).map(separateString);
 };
 exports.getExtraDeps = getExtraDeps;
 const setExtraDeps = async (doc, extraDeps) => {

@@ -36,9 +36,9 @@ function separateString(inputString: string): Package {
 export const getExtraDeps = async (doc: Document): Promise<Package[]> => {
   const extraDeps = doc.get('extra-deps') as YAMLSeq
 
-  const json = extraDeps.toJSON() as string[]
+  const json = extraDeps?.toJSON() as string[]
 
-  return json.map(separateString)
+  return (json || []).map(separateString)
 }
 
 export const setExtraDeps = async (
