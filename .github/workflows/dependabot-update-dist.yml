@@ -19,7 +19,6 @@ jobs:
 
     permissions:
       contents: write
-      statuses: write
 
     steps:
       - name: Checkout
