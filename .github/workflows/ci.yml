@@ -2,10 +2,14 @@ name: Continuous Integration
 
 on:
   pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
-      - 'releases/*'
+
+permissions:
+  contents: read
 
 jobs:
   test-typescript:
@@ -21,7 +25,7 @@ jobs:
         id: setup-node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .node-version
           cache: npm
 
       - name: Install Dependencies
@@ -49,15 +53,12 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Setup Stack
-        uses: haskell-actions/setup@v2
-        with:
-          enable-stack: true
-          stack-no-global: true
-
       - name: Test Local Action
         id: test-action
         uses: ./
         with:
-          stack-yaml: './__tests__/fixtures/stack.yaml'
-          resolver-major: false
+          milliseconds: 2000
+
+      - name: Print Output
+        id: output
+        run: echo "${{ steps.test-action.outputs.time }}"
