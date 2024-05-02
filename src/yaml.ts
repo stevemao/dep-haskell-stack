@@ -21,7 +21,7 @@ export const updateResolver = (doc: Document, resolver: string): Document => {
   return doc
 }
 
-interface Package {
+export interface Package {
   name: string
   version: string
 }
@@ -45,13 +45,14 @@ export const setExtraDeps = async (
   doc: Document,
   extraDeps: Package[]
 ): Promise<Document> => {
-  const seq = doc.get('extra-deps') as YAMLSeq
-  // eslint-disable-next-line github/array-foreach
-  extraDeps.forEach((dep, index) => {
-    seq.set(index, `${dep.name}-${dep.version}`)
-  })
-  doc.set('extra-deps', seq)
-
+  if (extraDeps.length && doc.has('extra-deps')) {
+    const seq = doc.get('extra-deps') as YAMLSeq
+    // eslint-disable-next-line github/array-foreach
+    extraDeps.forEach((dep, index) => {
+      seq.set(index, `${dep.name}-${dep.version}`)
+    })
+    doc.set('extra-deps', seq)
+  }
   return doc
 }
 

@@ -4257,12 +4257,14 @@ const getExtraDeps = async (doc) => {
 };
 exports.getExtraDeps = getExtraDeps;
 const setExtraDeps = async (doc, extraDeps) => {
-    const seq = doc.get('extra-deps');
-    // eslint-disable-next-line github/array-foreach
-    extraDeps.forEach((dep, index) => {
-        seq.set(index, `${dep.name}-${dep.version}`);
-    });
-    doc.set('extra-deps', seq);
+    if (extraDeps.length && doc.has('extra-deps')) {
+        const seq = doc.get('extra-deps');
+        // eslint-disable-next-line github/array-foreach
+        extraDeps.forEach((dep, index) => {
+            seq.set(index, `${dep.name}-${dep.version}`);
+        });
+        doc.set('extra-deps', seq);
+    }
     return doc;
 };
 exports.setExtraDeps = setExtraDeps;
