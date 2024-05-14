@@ -87,15 +87,15 @@ describe('yaml.ts', () => {
     const { doc } = await getStackYaml(`${__dirname}/fixtures/stack.yaml`)
     const extraDeps = [
       { name: 'polysemy-zoo', version: '0.8.2.0' },
-      { name: 'amazonka', version: '2' },
-      { name: 'amazonka-core', version: '2' },
-      { name: 'amazonka-sso', version: '2' },
-      { name: 'amazonka-sts', version: '2' },
-      { name: 'amazonka-apigatewaymanagementapi', version: '2' },
-      { name: 'amazonka-s3', version: '2' },
-      { name: 'amazonka-ses', version: '2' }
+      { name: 'amazonka', version: '2.0' },
+      { name: 'amazonka-core', version: '2.0' },
+      { name: 'amazonka-sso', version: '2.0' },
+      { name: 'amazonka-sts', version: '2.0' },
+      { name: 'amazonka-apigatewaymanagementapi', version: '2.0' },
+      { name: 'amazonka-s3', version: '2.0' },
+      { name: 'amazonka-ses', version: '2.0' }
     ]
-    const updated = await setExtraDeps(doc, extraDeps)
+    const updated = await setExtraDeps(doc, [])
     const updatedExtraDeps = await getExtraDeps(updated)
     expect(updatedExtraDeps).toStrictEqual(extraDeps)
   })
