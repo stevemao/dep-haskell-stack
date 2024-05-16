@@ -1,7 +1,7 @@
 {
   "name": "dep-haskell-stack",
   "description": "GitHub Actions Update Haskell Stack dependencies",
-  "version": "0.0.0",
+  "version": "2.4.2",
   "author": "Steve Mao",
   "private": true,
   "homepage": "https://github.com/stevemao/dep-haskell-stack",
