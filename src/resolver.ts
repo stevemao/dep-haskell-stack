@@ -47,7 +47,7 @@ const findLatestVersion = async (
     }
   }
 
-  return findLatestVersion(resolverType, version, page + 1)
+  return await findLatestVersion(resolverType, version, page + 1)
 }
 
 interface LTSVersion {
@@ -89,13 +89,13 @@ export const getLatestResolver = async (
   const ltsVersion = getLTSVersion(resolver)
 
   if (ltsVersion.resolverType === ResolverType.LTS) {
-    return findLatestVersion(ltsVersion.resolverType, {
+    return await findLatestVersion(ltsVersion.resolverType, {
       major: bumpMajor ? undefined : ltsVersion.major,
       ghc
     })
   }
 
-  return findLatestVersion(ltsVersion.resolverType, {
+  return await findLatestVersion(ltsVersion.resolverType, {
     ghc
   })
 }

@@ -3656,7 +3656,7 @@ const findLatestVersion = async (resolverType, version, page = 1) => {
             }
         }
     }
-    return findLatestVersion(resolverType, version, page + 1);
+    return await findLatestVersion(resolverType, version, page + 1);
 };
 const getLTSVersion = (resolver) => {
     const isLTS = resolver.startsWith(ResolverType.LTS);
@@ -3675,12 +3675,12 @@ exports.getLTSVersion = getLTSVersion;
 const getLatestResolver = async (resolver, bumpMajor, ghc) => {
     const ltsVersion = (0, exports.getLTSVersion)(resolver);
     if (ltsVersion.resolverType === ResolverType.LTS) {
-        return findLatestVersion(ltsVersion.resolverType, {
+        return await findLatestVersion(ltsVersion.resolverType, {
             major: bumpMajor ? undefined : ltsVersion.major,
             ghc
         });
     }
-    return findLatestVersion(ltsVersion.resolverType, {
+    return await findLatestVersion(ltsVersion.resolverType, {
         ghc
     });
 };
@@ -3731,7 +3731,7 @@ const getExtraDeps = async (doc) => {
 };
 exports.getExtraDeps = getExtraDeps;
 const setExtraDeps = async (doc, extraDeps) => {
-    if (extraDeps.length && doc.has('extra-deps')) {
+    if (extraDeps.length > 0 && doc.has('extra-deps')) {
         const seq = doc.get('extra-deps');
         // eslint-disable-next-line github/array-foreach
         extraDeps.forEach((dep, index) => {

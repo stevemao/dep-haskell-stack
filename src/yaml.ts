@@ -45,7 +45,7 @@ export const setExtraDeps = async (
   doc: Document,
   extraDeps: Package[]
 ): Promise<Document> => {
-  if (extraDeps.length && doc.has('extra-deps')) {
+  if (extraDeps.length > 0 && doc.has('extra-deps')) {
     const seq = doc.get('extra-deps') as YAMLSeq
     // eslint-disable-next-line github/array-foreach
     extraDeps.forEach((dep, index) => {
