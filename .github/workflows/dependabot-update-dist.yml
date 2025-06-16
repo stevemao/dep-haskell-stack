@@ -39,6 +39,6 @@ jobs:
         id: build
         run: npm run all
 
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: 'Rebuild all'
