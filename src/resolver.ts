@@ -22,7 +22,9 @@ const findLatestVersion = async (
     }
   })
 
-  const res = await http.get(`https://www.stackage.org/api/v1/snapshots?page=${page}`)
+  const res = await http.get(
+    `https://www.stackage.org/api/v1/snapshots?page=${page}`
+  )
 
   const body: string = await res.readBody()
   const data: Data = JSON.parse(body)
