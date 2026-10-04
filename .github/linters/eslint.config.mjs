@@ -1,11 +1,12 @@
 import js from '@eslint/js'
+import { defineConfig } from 'eslint/config'
 import github from 'eslint-plugin-github'
 import jest from 'eslint-plugin-jest'
 import tseslint from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import globals from 'globals'
 
-export default [
+export default defineConfig([
   {
     ignores: [
       '!.*',
@@ -27,7 +28,7 @@ export default [
     rules: { 'import/no-unresolved': 'off' }
   },
   {
-    files: ['**/*.ts'],
+    files: ['**/*.{js,ts,tx}'],
     languageOptions: {
       parser: tsParser,
       ecmaVersion: 2023,
@@ -97,4 +98,4 @@ export default [
       '@typescript-eslint/no-shadow': 'error'
     }
   }
-]
+])
