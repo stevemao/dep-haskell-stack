@@ -67,6 +67,8 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/exec": "^1.1.1",
+    "@actions/http-client": "^2.1.1",
+    "@jest/globals": "^30.5.2",
     "yaml": "^2.7.0"
   },
   "devDependencies": {

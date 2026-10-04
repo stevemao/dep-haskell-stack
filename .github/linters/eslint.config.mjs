@@ -53,6 +53,7 @@ export default [
       'eslint-comments/no-unused-disable': 'off',
       'i18n-text/no-en': 'off',
       'import/no-namespace': 'off',
+      'import/no-extraneous-dependencies': 'error',
       'no-console': 'off',
       'no-unused-vars': 'off',
       'prettier/prettier': 'error',
